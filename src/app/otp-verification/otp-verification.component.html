@@ -1,0 +1,16 @@
+<div class="section">
+    <div class="card mb-4">
+        <div class="title mb-3">
+            <h2>Otp Verification</h2>
+        </div>
+        <div class="otp-box mb-3">
+            <ng-otp-input (onInputChange)="onOtpChange($event)" [config]="{length:4}"></ng-otp-input>
+        </div>
+        <div class="button">
+            <Button class="btn btn-primary" (click)="onVerify()">Submit</Button>
+        </div>
+    </div>
+    <div class="error" *ngIf="errMessageButton">
+        <Button [routerLink]="['/auth/register']" class="btn btn-danger">Go to Register Page!</Button>
+    </div>
+</div>

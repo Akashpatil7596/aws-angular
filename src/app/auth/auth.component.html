@@ -1,0 +1,19 @@
+<div class="section">
+    <div class="card">
+        <div class="card_title">
+            <!-- <h1>Login to account</h1> -->
+            <span>Didn't register yet? <a [routerLink]="['/auth/register']" routerLinkActive="router-link-active">Sign
+                    Up</a></span>
+        </div>
+        <div class="form">
+            <form [formGroup]="loginForm" (ngSubmit)="onLogin(loginForm)">
+
+                <input type="email" formControlName="email" placeholder="email" formControlName="email" />
+                <input type="password" formControlName="password" placeholder="password" formControlName="password" />
+
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+
+    </div>
+</div>
