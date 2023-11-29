@@ -8,6 +8,7 @@ import {
   tap,
   throwError,
 } from 'rxjs';
+import { apiUrl } from '../config';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,7 @@ export class AppServicesService {
 
   registerApi(credentials: any) {
     return this.http
-      .post('http://localhost:8080/api/v1/users/registeration', credentials)
+      .post(`${apiUrl}api/v1/users/registeration`, credentials)
       .pipe(
         catchError((err: any) => {
           let errorMessage = err.error.message;
@@ -29,37 +30,33 @@ export class AppServicesService {
   }
 
   verifyOtpApi(otp: any) {
-    return this.http
-      .post('http://localhost:8080/api/v1/users/verify-user', otp)
-      .pipe(
-        catchError((err: any) => {
-          let errorMessage = err.error.message;
-          return throwError(errorMessage);
-        })
-      );
+    return this.http.post(`${apiUrl}api/v1/users/verify-user`, otp).pipe(
+      catchError((err: any) => {
+        let errorMessage = err.error.message;
+        return throwError(errorMessage);
+      })
+    );
   }
 
   loginApi(credentials: any) {
-    return this.http
-      .post('http://localhost:8080/api/v1/users/login', credentials)
-      .pipe(
-        catchError((err: any) => {
-          let errorMessage = err.error.message;
-          return throwError(errorMessage);
-        }),
-        tap((resData: any) => {
-          if (resData.success) {
-            const { token } = resData.data;
+    return this.http.post(`${apiUrl}api/v1/users/login`, credentials).pipe(
+      catchError((err: any) => {
+        let errorMessage = err.error.message;
+        return throwError(errorMessage);
+      }),
+      tap((resData: any) => {
+        if (resData.success) {
+          const { token } = resData.data;
 
-            localStorage.setItem('token', token);
-          }
-        })
-      );
+          localStorage.setItem('token', token);
+        }
+      })
+    );
   }
 
   logoutApi(token: any) {
     return this.http
-      .post('http://localhost:8080/api/v1/users/logout', token, {
+      .post(`${apiUrl}api/v1/users/logout`, token, {
         headers: new HttpHeaders({
           Authorization: `Bearer ${token}`,
         }),

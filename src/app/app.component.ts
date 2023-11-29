@@ -22,7 +22,6 @@ import { ErrorToastComponent } from './error-toast/error-toast.component';
   ],
   providers: [AppServicesService, AuthGuard],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
   constructor(private appService: AppServicesService) {}
