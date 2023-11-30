@@ -1,19 +1,45 @@
 <div class="section">
     <div class="card">
         <div class="card_title">
-            <!-- <h1>Login to account</h1> -->
-            <span>Didn't register yet? <a [routerLink]="['/auth/register']" routerLinkActive="router-link-active">Sign
-                    Up</a></span>
+
+            <span>Didn't register yet?
+                <a [routerLink]="['/register']" routerLinkActive="router-link-active">Sign Up
+                </a>
+            </span>
         </div>
         <div class="form">
+
             <form [formGroup]="loginForm" (ngSubmit)="onLogin(loginForm)">
 
-                <input type="email" formControlName="email" placeholder="email" formControlName="email" />
-                <input type="password" formControlName="password" placeholder="password" formControlName="password" />
+                <input type="email" formControlName="email" placeholder="email" />
+                <input type="password" formControlName="password" placeholder="password" />
 
-                <button type="submit">Sign Up</button>
+                <p><a data-bs-toggle="modal" data-bs-target="#exampleModal">forgot
+                        password?</a></p>
+
+                <button type=" submit">Sign In</button>
             </form>
         </div>
 
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    data-bs-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Email address</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="email" placeholder="email" #emailModal />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="OnSubmitModal()">Submit</button>
+            </div>
+        </div>
     </div>
 </div>

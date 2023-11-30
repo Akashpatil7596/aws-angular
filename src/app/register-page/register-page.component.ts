@@ -69,7 +69,7 @@ export class RegisterPageComponent implements OnInit {
         }
 
         localStorage.setItem('user', data.data._id);
-        this.router.navigate(['/auth/otp']);
+        this.router.navigate(['/otp']);
       },
       (error) => {
         this.appService.errorToastMessage.next(error);

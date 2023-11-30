@@ -9,15 +9,28 @@ import { ErrorPageComponent } from './error-page/error-page.component';
 
 export const routes: Routes = [
   {
-    path: '',
-    redirectTo: '/auth/login',
+    path: 'login',
+    component: AuthComponent,
     pathMatch: 'full',
   },
   {
+    path: 'register',
+    component: RegisterPageComponent,
+  },
+  {
+    path: 'otp',
+    component: OtpVerificationComponent,
+  },
+  {
     path: 'home',
-    canActivate: [AuthGuard],
     component: HomePageComponent,
+    canActivate: [AuthGuard],
     children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'user-list',
+      },
       {
         path: 'user-list',
         component: UserDataComponent,
@@ -25,27 +38,9 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'auth',
-    children: [
-      {
-        path: '',
-        redirectTo: 'login',
-        pathMatch: 'full',
-      },
-      {
-        path: 'login',
-        component: AuthComponent,
-        pathMatch: 'full',
-      },
-      {
-        path: 'register',
-        component: RegisterPageComponent,
-      },
-      {
-        path: 'otp',
-        component: OtpVerificationComponent,
-      },
-    ],
+    path: '',
+    redirectTo: '/login',
+    pathMatch: 'full',
   },
   {
     path: '**',

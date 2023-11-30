@@ -29,7 +29,7 @@ export class AuthGuard implements CanActivate {
     if (!isExpired) {
       return true;
     } else {
-      this.router.navigate(['/auth']);
+      this.router.navigate(['/login']);
       return false;
     }
   }

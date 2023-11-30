@@ -15,6 +15,7 @@ import { apiUrl } from '../config';
 })
 export class AppServicesService {
   errorToastMessage = new Subject();
+  profilePicture = new BehaviorSubject('');
 
   constructor(private http: HttpClient) {}
 
@@ -29,8 +30,8 @@ export class AppServicesService {
       );
   }
 
-  verifyOtpApi(otp: any) {
-    return this.http.post(`${apiUrl}api/v1/users/verify-user`, otp).pipe(
+  verifyOtpApi(otp: any, baseUrl: any) {
+    return this.http.post(`${apiUrl}${baseUrl}`, otp).pipe(
       catchError((err: any) => {
         let errorMessage = err.error.message;
         return throwError(errorMessage);
@@ -61,6 +62,35 @@ export class AppServicesService {
           Authorization: `Bearer ${token}`,
         }),
       })
+      .pipe(
+        catchError((err: any) => {
+          let errorMessage = err.error.message;
+          return throwError(errorMessage);
+        })
+      );
+  }
+
+  getUserByToken(token: any) {
+    return this.http
+      .post(`${apiUrl}api/v1/users/profile`, token, {
+        headers: new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+        }),
+      })
+      .pipe(
+        catchError((err: any) => {
+          let errorMessage = err.error.message;
+          return throwError(errorMessage);
+        }),
+        tap((resData: any) => {
+          this.profilePicture.next(resData.data.profile_picture);
+        })
+      );
+  }
+
+  forgotPasswordApi(payload: any) {
+    return this.http
+      .post(`${apiUrl}api/v1/users/forgot-password`, payload)
       .pipe(
         catchError((err: any) => {
           let errorMessage = err.error.message;

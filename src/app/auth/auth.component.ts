@@ -1,4 +1,10 @@
-import { Component, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AppServicesService } from '../services/app-services.service';
@@ -23,11 +29,20 @@ import { RegisterPageComponent } from '../register-page/register-page.component'
   styleUrl: './auth.component.css',
 })
 export class AuthComponent implements OnInit {
+  @ViewChild('emailModal', { static: true })
+  emailModal!: ElementRef;
+
   loginForm!: FormGroup;
 
   constructor(private appService: AppServicesService, private router: Router) {}
 
   ngOnInit(): void {
+    const isExistToken = localStorage.getItem('token');
+
+    if (isExistToken) {
+      this.router.navigate(['/home']);
+    }
+
     this.loginForm = new FormGroup({
       email: new FormControl(null),
       password: new FormControl(null),
@@ -49,6 +64,26 @@ export class AuthComponent implements OnInit {
         }
 
         this.router.navigate(['/home']);
+      },
+      (err) => {
+        this.appService.errorToastMessage.next(err);
+        console.log('err', err);
+      }
+    );
+  }
+  OnSubmitModal() {
+    const payload = {
+      email: this.emailModal.nativeElement.value,
+    };
+
+    this.appService.forgotPasswordApi(payload).subscribe(
+      (data: any) => {
+        if (!data.success) {
+          this.appService.errorToastMessage.next(data.error);
+          return;
+        }
+        localStorage.setItem('email', data.data.email);
+        this.router.navigate(['/otp']);
       },
       (err) => {
         this.appService.errorToastMessage.next(err);

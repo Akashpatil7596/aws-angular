@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgOtpInputModule } from 'ng-otp-input';
 import { AppServicesService } from '../services/app-services.service';
 import { Router, RouterModule } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-otp-verification',
@@ -11,23 +12,49 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './otp-verification.component.html',
   styleUrl: './otp-verification.component.css',
 })
-export class OtpVerificationComponent {
+export class OtpVerificationComponent implements OnInit {
   otpInput: string = '';
   errMessageButton: boolean = false;
 
-  constructor(private appService: AppServicesService, private router: Router) {}
+  constructor(
+    private appService: AppServicesService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
+
+  ngOnInit(): void {
+    this.toastr.info('Otp has been send to your mail', '', {
+      positionClass: 'toast-top-center',
+    });
+  }
 
   onOtpChange(event: string) {
     this.otpInput = event;
   }
 
   onVerify() {
-    const verificationPayload = {
-      otp: this.otpInput,
-      userId: localStorage.getItem('user'),
-    };
+    const email = localStorage.getItem('email');
+    const userId = localStorage.getItem('user');
+    let baseUrl;
 
-    this.appService.verifyOtpApi(verificationPayload).subscribe(
+    let verificationPayload = {};
+
+    if (email) {
+      baseUrl = 'api/v1/users/verify-forgot-password';
+
+      verificationPayload = {
+        otp: this.otpInput,
+        email: email,
+      };
+    } else {
+      baseUrl = 'api/v1/users/verify-user';
+      verificationPayload = {
+        otp: this.otpInput,
+        userId: userId,
+      };
+    }
+
+    this.appService.verifyOtpApi(verificationPayload, baseUrl).subscribe(
       (data: any) => {
         if (!data.success) {
           this.errMessageButton = true;
@@ -36,7 +63,7 @@ export class OtpVerificationComponent {
           return;
         }
         localStorage.removeItem('user');
-        this.router.navigate(['/auth/login']);
+        this.router.navigate(['/login']);
       },
       (err) => {
         this.errMessageButton = true;
