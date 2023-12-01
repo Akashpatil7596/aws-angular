@@ -28,6 +28,10 @@ export class OtpVerificationComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    this.toastr.clear();
+  }
+
   onOtpChange(event: string) {
     this.otpInput = event;
   }
@@ -35,6 +39,7 @@ export class OtpVerificationComponent implements OnInit {
   onVerify() {
     const email = localStorage.getItem('email');
     const userId = localStorage.getItem('user');
+
     let baseUrl;
 
     let verificationPayload = {};
@@ -46,30 +51,52 @@ export class OtpVerificationComponent implements OnInit {
         otp: this.otpInput,
         email: email,
       };
+
+      this.appService.verifyOtpApi(verificationPayload, baseUrl).subscribe(
+        (data: any) => {
+          if (!data.success) {
+            this.errMessageButton = true;
+
+            this.appService.errorToastMessage.next(data.error);
+            return;
+          }
+
+          this.router.navigate(['/reset-password']);
+        },
+        (err) => {
+          this.errMessageButton = true;
+
+          this.appService.errorToastMessage.next(err);
+        }
+      );
     } else {
       baseUrl = 'api/v1/users/verify-user';
       verificationPayload = {
         otp: this.otpInput,
         userId: userId,
       };
-    }
 
-    this.appService.verifyOtpApi(verificationPayload, baseUrl).subscribe(
-      (data: any) => {
-        if (!data.success) {
+      this.appService.verifyOtpApi(verificationPayload, baseUrl).subscribe(
+        (data: any) => {
+          console.log(data);
+
+          if (!data.success) {
+            this.errMessageButton = true;
+
+            this.appService.errorToastMessage.next(data.error);
+            return;
+          }
+
+          localStorage.removeItem('user');
+          this.router.navigate(['/login']);
+        },
+        (err) => {
+          console.log(err);
           this.errMessageButton = true;
 
-          this.appService.errorToastMessage.next(data.error);
-          return;
+          this.appService.errorToastMessage.next(err);
         }
-        localStorage.removeItem('user');
-        this.router.navigate(['/login']);
-      },
-      (err) => {
-        this.errMessageButton = true;
-
-        this.appService.errorToastMessage.next(err);
-      }
-    );
+      );
+    }
   }
 }
