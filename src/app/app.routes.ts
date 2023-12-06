@@ -6,6 +6,8 @@ import { UserDataComponent } from './user-data/user-data.component';
 import { OtpVerificationComponent } from './otp-verification/otp-verification.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { UserSettingComponent } from './user-setting/user-setting.component';
 
 export const routes: Routes = [
   {
@@ -22,6 +24,10 @@ export const routes: Routes = [
     component: OtpVerificationComponent,
   },
   {
+    path: 'reset-password',
+    component: ResetPasswordComponent,
+  },
+  {
     path: 'home',
     component: HomePageComponent,
     canActivate: [AuthGuard],
@@ -34,6 +40,10 @@ export const routes: Routes = [
       {
         path: 'user-list',
         component: UserDataComponent,
+      },
+      {
+        path: 'user-settings',
+        component: UserSettingComponent,
       },
     ],
   },

@@ -1,0 +1,48 @@
+<!-- app.component.html -->
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Left Sidebar -->
+        <div class="col-md-2 sidebar">
+            <h2>Setting</h2>
+            <ul>
+                <li><a [ngClass]="{'unique': activeMenuItem === 'home'}" (click)="isVisibleList('home')">Home</a></li>
+                <li><a (click)="isVisibleList('editProfile')"
+                        [ngClass]="{'unique': activeMenuItem === 'editProfile'}">Edit Profile</a></li>
+                <li><a (click)="isVisibleList('about')" [ngClass]="{'unique': activeMenuItem === 'about'}">About</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-md-10">
+            <div class="section">
+
+
+                @if(isPageVisible === 'home'){
+                <h1>Home Page</h1>
+                }@else if (isPageVisible === 'editProfile') {
+                <div class="card">
+                    <div class="form">
+
+                        <form [formGroup]="updateProfileForm" (ngSubmit)="onUpdateFormSubmit(updateProfileForm)">
+                            <input type="text" formControlName="username" />
+                            <input type="email" formControlName="email" />
+                            <input type="file" (change)="onImageUpload($event)" />
+                            <button type="submit">Sign Up</button>
+                        </form>
+                    </div>
+                </div>
+
+                }@else if (isPageVisible === 'about') {
+                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam sunt eius debitis totam
+                    accusamus
+                    omnis repudiandae, distinctio at obcaecati, quae incidunt dolores pariatur illo, sed nobis quia
+                    quisquam
+                    vero quos.</p>
+                }
+
+            </div>
+
+        </div>
+    </div>
+</div>

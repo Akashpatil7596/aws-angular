@@ -23,6 +23,14 @@ export class OtpVerificationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const isExist =
+      localStorage.getItem('email') || localStorage.getItem('user');
+
+    if (!isExist) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
     this.toastr.info('Otp has been send to your mail', '', {
       positionClass: 'toast-top-center',
     });
@@ -57,7 +65,7 @@ export class OtpVerificationComponent implements OnInit {
           if (!data.success) {
             this.errMessageButton = true;
 
-            this.appService.errorToastMessage.next(data.error);
+            this.appService.errToastMessage.update(() => data.error);
             return;
           }
 
@@ -66,7 +74,7 @@ export class OtpVerificationComponent implements OnInit {
         (err) => {
           this.errMessageButton = true;
 
-          this.appService.errorToastMessage.next(err);
+          this.appService.errToastMessage.update(() => err);
         }
       );
     } else {
@@ -83,7 +91,7 @@ export class OtpVerificationComponent implements OnInit {
           if (!data.success) {
             this.errMessageButton = true;
 
-            this.appService.errorToastMessage.next(data.error);
+            this.appService.errToastMessage.update(() => data.error);
             return;
           }
 
@@ -91,10 +99,9 @@ export class OtpVerificationComponent implements OnInit {
           this.router.navigate(['/login']);
         },
         (err) => {
-          console.log(err);
           this.errMessageButton = true;
 
-          this.appService.errorToastMessage.next(err);
+          this.appService.errToastMessage.update(() => err);
         }
       );
     }

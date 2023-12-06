@@ -1,4 +1,4 @@
-import { Component, DoCheck, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppServicesService } from '../services/app-services.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,10 +19,18 @@ export class ErrorToastComponent implements OnInit {
     private appService: AppServicesService,
     private toastr: ToastrService
   ) {}
+
   ngOnInit(): void {
-    this.appService.errorToastMessage.subscribe((message: any) => {
-      this.errorToastMessage = message;
-      this.toastr.error(message);
+    this.errorToastMessage = computed(() => {
+      const message = this.appService.errToastMessage();
+      if (message.length) {
+        this.toastr.error(message);
+      }
+      return message;
     });
+
+    setTimeout(() => {
+      this.appService.errToastMessage.update(() => '');
+    }, 4000);
   }
 }

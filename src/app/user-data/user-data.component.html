@@ -1,12 +1,13 @@
 <div class="section">
     <div class="row">
         <div class="col-lg-4">
-            <div class="card" style="width: 100%; height: 600px;border: 0;">
-                <img [src]="imagePath" alt="user" class="card-img-top">
+            <div style="width: 100%; height: 600px;border: 0;">
+                <img [ngSrc]="imagePath" alt="user" class="card-img-top">
+
                 <div class="card-body">
                     <h5 class="card-title">{{userData.username}}</h5>
                     <p class="card-text">{{userData.email}}</p>
-                    <a class="btn btn-primary">Go somewhere</a>
+
                 </div>
             </div>
         </div>

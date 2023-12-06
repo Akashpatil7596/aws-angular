@@ -1,12 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { AppServicesService } from '../services/app-services.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { UserSettingComponent } from '../user-setting/user-setting.component';
 
 @Component({
   selector: 'app-user-data',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    NgOptimizedImage,
+    ReactiveFormsModule,
+    UserSettingComponent,
+  ],
   templateUrl: './user-data.component.html',
   styleUrl: './user-data.component.css',
 })
@@ -16,7 +28,8 @@ export class UserDataComponent implements OnInit {
 
   constructor(
     private appService: AppServicesService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {

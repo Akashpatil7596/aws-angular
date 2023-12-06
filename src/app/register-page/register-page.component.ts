@@ -18,6 +18,20 @@ export class RegisterPageComponent implements OnInit {
   constructor(private appService: AppServicesService, private router: Router) {}
 
   ngOnInit(): void {
+    const isExistOtpData =
+      localStorage.getItem('email') || localStorage.getItem('user');
+    const isExistToken = localStorage.getItem('token');
+
+    if (isExistOtpData) {
+      this.router.navigate(['/otp']);
+      return;
+    }
+
+    if (isExistToken) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
     this.registrationForm = new FormGroup({
       username: new FormControl(),
       email: new FormControl(),
@@ -64,15 +78,15 @@ export class RegisterPageComponent implements OnInit {
     this.appService.registerApi(formData).subscribe(
       (data: any) => {
         if (!data.success) {
-          this.appService.errorToastMessage.next(data.error);
-          return data;
+          this.appService.errToastMessage.update(() => data.error);
+          return;
         }
 
         localStorage.setItem('user', data.data._id);
         this.router.navigate(['/otp']);
       },
       (error) => {
-        this.appService.errorToastMessage.next(error);
+        this.appService.errToastMessage.update(() => error);
         console.error('Registration failed', error);
       }
     );

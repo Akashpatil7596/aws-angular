@@ -1,18 +1,13 @@
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AppServicesService } from '../services/app-services.service';
 import { Router, RouterModule } from '@angular/router';
-import { AuthGuard } from './auth.guard';
 import { ErrorToastComponent } from '../error-toast/error-toast.component';
 import { OtpVerificationComponent } from '../otp-verification/otp-verification.component';
 import { RegisterPageComponent } from '../register-page/register-page.component';
+import { ResetPasswordComponent } from '../reset-password/reset-password.component';
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-auth',
@@ -23,7 +18,9 @@ import { RegisterPageComponent } from '../register-page/register-page.component'
     ErrorToastComponent,
     OtpVerificationComponent,
     RegisterPageComponent,
+    ResetPasswordComponent,
     RouterModule,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
@@ -43,6 +40,13 @@ export class AuthComponent implements OnInit {
       this.router.navigate(['/home']);
     }
 
+    const otpPageLocalStorage =
+      localStorage.getItem('user') || localStorage.getItem('email');
+
+    if (otpPageLocalStorage) {
+      this.router.navigate(['/otp']);
+    }
+
     this.loginForm = new FormGroup({
       email: new FormControl(null),
       password: new FormControl(null),
@@ -50,6 +54,8 @@ export class AuthComponent implements OnInit {
   }
 
   onLogin(formData: any) {
+    this.appService.isVisibleSpinner.next(true);
+
     const credentials = {
       email: formData.value.email,
       password: formData.value.password,
@@ -58,7 +64,8 @@ export class AuthComponent implements OnInit {
     this.appService.loginApi(credentials).subscribe(
       (data: any) => {
         if (!data.success) {
-          this.appService.errorToastMessage.next(data.error);
+          this.appService.errToastMessage.update(() => data.error);
+
           localStorage.removeItem('token');
           return;
         }
@@ -66,11 +73,11 @@ export class AuthComponent implements OnInit {
         this.router.navigate(['/home']);
       },
       (err) => {
-        this.appService.errorToastMessage.next(err);
-        console.log('err', err);
+        this.appService.errToastMessage.update(() => err);
       }
     );
   }
+
   OnSubmitModal() {
     const payload = {
       email: this.emailModal.nativeElement.value,
@@ -79,15 +86,14 @@ export class AuthComponent implements OnInit {
     this.appService.forgotPasswordApi(payload).subscribe(
       (data: any) => {
         if (!data.success) {
-          this.appService.errorToastMessage.next(data.error);
+          this.appService.errToastMessage.update(() => data.error);
           return;
         }
         localStorage.setItem('email', data.data.email);
         this.router.navigate(['/otp']);
       },
       (err) => {
-        this.appService.errorToastMessage.next(err);
-        console.log('err', err);
+        this.appService.errToastMessage.update(() => err);
       }
     );
   }

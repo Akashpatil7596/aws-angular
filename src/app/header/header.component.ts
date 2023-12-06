@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppServicesService } from '../services/app-services.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
@@ -20,9 +20,7 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.appService.profilePicture.subscribe((data: any) => {
-      console.log('DATA', data);
-
+    this.appService.profilePicture.subscribe((data) => {
       this.navbarUserImage = this.sanitizer.bypassSecurityTrustResourceUrl(
         'data:image/jpg;base64,' + data
       );
@@ -34,14 +32,14 @@ export class HeaderComponent implements OnInit {
     this.appService.logoutApi(token).subscribe(
       (data: any) => {
         if (!data.success) {
-          this.appService.errorToastMessage.next(data.error);
+          this.appService.errToastMessage.update(() => data.error);
           return;
         }
         localStorage.removeItem('token');
         this.router.navigate(['/login']);
       },
       (err) => {
-        console.log('easasrr', err);
+        this.appService.errToastMessage.update(() => err);
       }
     );
   }

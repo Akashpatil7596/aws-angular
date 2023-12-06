@@ -9,6 +9,11 @@
   font-family: "Poppins", sans-serif;
   font-weight: 600;
 }
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 a {
   cursor: pointer;
   text-decoration: none;

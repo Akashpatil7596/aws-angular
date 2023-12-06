@@ -5,4 +5,5 @@
     </div>
   </div>
 </div>
-<app-error-toast></app-error-toast>
+<app-error-toast *ngIf="isVisibleErrorToast().length"></app-error-toast>
+<app-loading-spinner></app-loading-spinner>

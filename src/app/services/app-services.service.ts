@@ -1,9 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import {
   BehaviorSubject,
   Subject,
   catchError,
+  map,
   pipe,
   tap,
   throwError,
@@ -14,8 +15,9 @@ import { apiUrl } from '../config';
   providedIn: 'root',
 })
 export class AppServicesService {
-  errorToastMessage = new Subject();
-  profilePicture = new BehaviorSubject('');
+  errToastMessage = signal<any>('');
+  isVisibleSpinner = new BehaviorSubject<boolean>(false);
+  profilePicture = new BehaviorSubject<any>('');
 
   constructor(private http: HttpClient) {}
 
@@ -42,10 +44,13 @@ export class AppServicesService {
   loginApi(credentials: any) {
     return this.http.post(`${apiUrl}api/v1/users/login`, credentials).pipe(
       catchError((err: any) => {
+        this.isVisibleSpinner.next(false);
         let errorMessage = err.error.message;
         return throwError(errorMessage);
       }),
       tap((resData: any) => {
+        this.isVisibleSpinner.next(false);
+
         if (resData.success) {
           const { token } = resData.data;
 
@@ -97,5 +102,27 @@ export class AppServicesService {
           return throwError(errorMessage);
         })
       );
+  }
+
+  resetPasswordApi(payload: any) {
+    return this.http.post(`${apiUrl}api/v1/users/reset-password`, payload).pipe(
+      catchError((err: any) => {
+        let errorMessage = err.error.message;
+        return throwError(errorMessage);
+      })
+    );
+  }
+
+  updateUserApi(payload: any, param: any) {
+    return this.http.patch(`${apiUrl}api/v1/users/${param}`, payload).pipe(
+      catchError((err: any) => {
+        this.isVisibleSpinner.next(false);
+        let errorMessage = err.error.message;
+        return throwError(errorMessage);
+      }),
+      tap((resData: any) => {
+        this.isVisibleSpinner.next(false);
+      })
+    );
   }
 }
