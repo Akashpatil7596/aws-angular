@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AppServicesService } from '../services/app-services.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { BaseUrl } from '../services/config.api';
 
 @Component({
   selector: 'app-reset-password',
@@ -31,7 +32,7 @@ export class ResetPasswordComponent {
   onSubmit(formData: any) {
     formData.value.email = localStorage.getItem('email');
 
-    this.appService.resetPasswordApi(formData.value).subscribe(
+    this.appService.postAPI(formData.value, BaseUrl.resetPassword).subscribe(
       (data: any) => {
         if (!data.success) {
           this.appService.errToastMessage.update(() => data.error);

@@ -1,8 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { AppServicesService } from '../services/app-services.service';
 import { Router, RouterModule } from '@angular/router';
+import { BaseUrl } from '../services/config.api';
 
 @Component({
   selector: 'app-register-page',
@@ -14,6 +20,7 @@ import { Router, RouterModule } from '@angular/router';
 export class RegisterPageComponent implements OnInit {
   registrationForm!: FormGroup;
   userDetails: any = {};
+  count = signal(0);
 
   constructor(private appService: AppServicesService, private router: Router) {}
 
@@ -34,7 +41,7 @@ export class RegisterPageComponent implements OnInit {
 
     this.registrationForm = new FormGroup({
       username: new FormControl(),
-      email: new FormControl(),
+      email: new FormControl(null, [Validators.required, Validators.email]),
       password: new FormControl(),
       confirm_password: new FormControl(),
       image: new FormControl(),
@@ -67,6 +74,16 @@ export class RegisterPageComponent implements OnInit {
 
     const formValue = this.registrationForm.value;
 
+    if (
+      !formValue.username ||
+      !formValue.email ||
+      !formValue.password ||
+      !formValue.confirm_password ||
+      !formValue.image
+    ) {
+      this.appService.errToastMessage.set('Fill out all fields');
+    }
+
     const file = new File([formValue.image.data], formValue.image.name);
 
     formData.append('username', formValue.username);
@@ -75,7 +92,7 @@ export class RegisterPageComponent implements OnInit {
     formData.append('confirm_password', formValue.confirm_password);
     formData.append('image', file);
 
-    this.appService.registerApi(formData).subscribe(
+    this.appService.postAPI(formData, BaseUrl.registration).subscribe(
       (data: any) => {
         if (!data.success) {
           this.appService.errToastMessage.update(() => data.error);
@@ -102,5 +119,9 @@ export class RegisterPageComponent implements OnInit {
     }
 
     return new Blob([ia], { type: fileType });
+  }
+
+  increment() {
+    this.count.update((value) => value + 1);
   }
 }

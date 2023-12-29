@@ -1,6 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { AppServicesService } from '../services/app-services.service';
 import { Router, RouterModule } from '@angular/router';
 import { ErrorToastComponent } from '../error-toast/error-toast.component';
@@ -8,6 +13,7 @@ import { OtpVerificationComponent } from '../otp-verification/otp-verification.c
 import { RegisterPageComponent } from '../register-page/register-page.component';
 import { ResetPasswordComponent } from '../reset-password/reset-password.component';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+import { BaseUrl } from '../services/config.api';
 
 @Component({
   selector: 'app-auth',
@@ -48,7 +54,7 @@ export class AuthComponent implements OnInit {
     }
 
     this.loginForm = new FormGroup({
-      email: new FormControl(null),
+      email: new FormControl(null, [Validators.required, Validators.email]),
       password: new FormControl(null),
     });
   }
@@ -56,20 +62,14 @@ export class AuthComponent implements OnInit {
   onLogin(formData: any) {
     this.appService.isVisibleSpinner.next(true);
 
-    const credentials = {
+    const payload = {
       email: formData.value.email,
       password: formData.value.password,
     };
 
-    this.appService.loginApi(credentials).subscribe(
+    this.appService.postAPI(payload, BaseUrl.login).subscribe(
       (data: any) => {
-        if (!data.success) {
-          this.appService.errToastMessage.update(() => data.error);
-
-          localStorage.removeItem('token');
-          return;
-        }
-
+        localStorage.setItem('token', data.data.token);
         this.router.navigate(['/home']);
       },
       (err) => {
@@ -83,7 +83,7 @@ export class AuthComponent implements OnInit {
       email: this.emailModal.nativeElement.value,
     };
 
-    this.appService.forgotPasswordApi(payload).subscribe(
+    this.appService.postAPI(payload, BaseUrl.forgotPassword).subscribe(
       (data: any) => {
         if (!data.success) {
           this.appService.errToastMessage.update(() => data.error);

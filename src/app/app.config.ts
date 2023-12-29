@@ -20,6 +20,6 @@ export const appConfig: ApplicationConfig = {
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     JwtHelperService,
     provideAnimations(),
-    provideToastr({ timeOut: 4000, maxOpened: 1 }),
+    provideToastr({ timeOut: 4000, maxOpened: 2 }),
   ],
 };

@@ -17,32 +17,12 @@ import { apiUrl } from '../config';
 export class AppServicesService {
   errToastMessage = signal<any>('');
   isVisibleSpinner = new BehaviorSubject<boolean>(false);
-  profilePicture = new BehaviorSubject<any>('');
+  profilePicture = signal<any>('');
 
   constructor(private http: HttpClient) {}
 
-  registerApi(credentials: any) {
-    return this.http
-      .post(`${apiUrl}api/v1/users/registeration`, credentials)
-      .pipe(
-        catchError((err: any) => {
-          let errorMessage = err.error.message;
-          return throwError(errorMessage);
-        })
-      );
-  }
-
-  verifyOtpApi(otp: any, baseUrl: any) {
-    return this.http.post(`${apiUrl}${baseUrl}`, otp).pipe(
-      catchError((err: any) => {
-        let errorMessage = err.error.message;
-        return throwError(errorMessage);
-      })
-    );
-  }
-
-  loginApi(credentials: any) {
-    return this.http.post(`${apiUrl}api/v1/users/login`, credentials).pipe(
+  getAPI(baseUrl: string) {
+    return this.http.get(`${apiUrl}${baseUrl}`).pipe(
       catchError((err: any) => {
         this.isVisibleSpinner.next(false);
         let errorMessage = err.error.message;
@@ -50,12 +30,32 @@ export class AppServicesService {
       }),
       tap((resData: any) => {
         this.isVisibleSpinner.next(false);
+      })
+    );
+  }
 
-        if (resData.success) {
-          const { token } = resData.data;
+  postAPI(payload: any, baseUrl: string) {
+    return this.http.post(`${apiUrl}${baseUrl}`, payload).pipe(
+      catchError((err: any) => {
+        let errorMessage = err.error.message;
+        this.isVisibleSpinner.next(false);
+        return throwError(errorMessage);
+      }),
+      tap((resDat: any) => {
+        this.isVisibleSpinner.next(false);
+      })
+    );
+  }
 
-          localStorage.setItem('token', token);
-        }
+  patchAPI(payload: any, param: any, baseUrl: string) {
+    return this.http.patch(`${apiUrl}${baseUrl}${param}`, payload).pipe(
+      catchError((err: any) => {
+        this.isVisibleSpinner.next(false);
+        let errorMessage = err.error.message;
+        return throwError(errorMessage);
+      }),
+      tap((resData: any) => {
+        this.isVisibleSpinner.next(false);
       })
     );
   }
@@ -88,41 +88,8 @@ export class AppServicesService {
           return throwError(errorMessage);
         }),
         tap((resData: any) => {
-          this.profilePicture.next(resData.data.profile_picture);
+          this.profilePicture.set(resData.data.profile_picture.data);
         })
       );
-  }
-
-  forgotPasswordApi(payload: any) {
-    return this.http
-      .post(`${apiUrl}api/v1/users/forgot-password`, payload)
-      .pipe(
-        catchError((err: any) => {
-          let errorMessage = err.error.message;
-          return throwError(errorMessage);
-        })
-      );
-  }
-
-  resetPasswordApi(payload: any) {
-    return this.http.post(`${apiUrl}api/v1/users/reset-password`, payload).pipe(
-      catchError((err: any) => {
-        let errorMessage = err.error.message;
-        return throwError(errorMessage);
-      })
-    );
-  }
-
-  updateUserApi(payload: any, param: any) {
-    return this.http.patch(`${apiUrl}api/v1/users/${param}`, payload).pipe(
-      catchError((err: any) => {
-        this.isVisibleSpinner.next(false);
-        let errorMessage = err.error.message;
-        return throwError(errorMessage);
-      }),
-      tap((resData: any) => {
-        this.isVisibleSpinner.next(false);
-      })
-    );
   }
 }

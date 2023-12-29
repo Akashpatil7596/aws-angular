@@ -21,16 +21,10 @@ export class ErrorToastComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.errorToastMessage = computed(() => {
-      const message = this.appService.errToastMessage();
-      if (message.length) {
-        this.toastr.error(message);
-      }
-      return message;
-    });
+    this.errorToastMessage = this.appService.errToastMessage();
 
-    setTimeout(() => {
-      this.appService.errToastMessage.update(() => '');
-    }, 4000);
+    this.toastr.error(this.errorToastMessage);
+
+    this.appService.errToastMessage.set('');
   }
 }

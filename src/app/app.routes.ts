@@ -8,6 +8,7 @@ import { RegisterPageComponent } from './register-page/register-page.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { UserSettingComponent } from './user-setting/user-setting.component';
+import { ProductMainComponent } from './product-main/product-main.component';
 
 export const routes: Routes = [
   {
@@ -35,7 +36,11 @@ export const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'user-list',
+        redirectTo: 'product-list',
+      },
+      {
+        path: 'product-list',
+        component: ProductMainComponent,
       },
       {
         path: 'user-list',

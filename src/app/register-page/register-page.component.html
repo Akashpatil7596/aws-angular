@@ -12,9 +12,16 @@
                 <input type="password" formControlName="password" placeholder="password" />
                 <input type="password" formControlName="confirm_password" placeholder="confirm password" />
                 <input type="file" (change)="onImageUpload($event)" />
-                <button type="submit">Sign Up</button>
+                <button type="submit" [disabled]="!registrationForm.valid"
+                    [ngClass]="{'enabled': registrationForm.valid, 'disabled': !registrationForm.valid}">Sign
+                    Up</button>
             </form>
         </div>
 
     </div>
+</div>
+
+<div class="container">
+    <p>{{count()}}</p>
+    <button (click)="increment()" class="btn btn-primary">Click me</button>
 </div>

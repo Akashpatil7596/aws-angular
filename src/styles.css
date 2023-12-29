@@ -2,6 +2,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Roboto&display=swap");
 
+/*
+ * global css
+*/
+
 * {
   margin: 0;
   padding: 0;
@@ -21,7 +25,10 @@ a {
 p {
   margin: 0;
 }
-/* based on angular-toastr css https://github.com/Foxandxss/angular-toastr/blob/cb508fe6801d6b288d3afc525bb40fee1b101650/dist/angular-toastr.css */
+
+/*
+ * toaster css
+*/
 
 /* position */
 .toast-center-center {
@@ -90,7 +97,6 @@ p {
   font-weight: bold;
   color: #ffffff;
   text-shadow: 0 1px 0 #ffffff;
-  /* opacity: 0.8; */
 }
 .toast-close-button:hover,
 .toast-close-button:focus {

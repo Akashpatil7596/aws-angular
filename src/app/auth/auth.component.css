@@ -1,33 +1,12 @@
-.section {
-  height: 100vh;
+@import "../../styling/form.css";
 
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  background-image: radial-gradient(
-    circle farthest-corner at 10% 20%,
-    rgb(119, 201, 207) 0%,
-    rgba(255, 211, 165, 1) 90%
-  );
+.modal-content {
+  background-color: #0f2862;
+  font-weight: 600;
 }
 
-.card {
-  border-radius: 10px;
-  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
-  width: 400px;
-  height: auto;
-  background-color: #ffffff;
-  padding: 10px 30px;
-}
-
-.card_title {
-  text-align: center;
-  padding: 10px;
-}
-
-.card_title h1 {
-  font-size: 26px;
-  font-weight: bold;
+.modal-header {
+  color: #fff;
 }
 
 .modal-body input {
@@ -40,33 +19,11 @@
   border-radius: 4px;
 }
 
-.form input {
-  margin: 10px 0;
-  width: 100%;
-  background-color: #e2e2e2;
-  border: none;
-  outline: none;
-  padding: 12px 20px;
-  border-radius: 4px;
-}
-
-.form button {
-  margin: 10px 0;
-  background-color: #4796ff;
-  color: #ffffff;
-  font-size: 16px;
-  outline: none;
-  border-radius: 5px;
-  border: none;
-  padding: 8px 15px;
-  width: 100%;
-}
-
 .form p {
   margin: 10px 0;
 }
 
 .card a {
-  color: #4796ff;
+  color: #488de7;
   text-decoration: none;
 }

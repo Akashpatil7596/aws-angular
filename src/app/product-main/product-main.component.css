@@ -1,0 +1,26 @@
+.container {
+  margin: 210px auto;
+}
+.card {
+  border-radius: 30px;
+}
+.list-ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.list-li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: calc(100% / 4);
+}
+.custom-card-img {
+  height: 242px;
+  width: 286px;
+  object-fit: cover;
+}
+.card-text {
+  margin: 8px 0;
+}

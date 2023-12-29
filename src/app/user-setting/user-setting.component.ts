@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppServicesService } from '../services/app-services.service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { BaseUrl } from '../services/config.api';
 
 @Component({
   selector: 'app-user-setting',
@@ -54,19 +55,21 @@ export class UserSettingComponent implements OnInit {
     formData.append('email', formValue.email);
     formData.append('image', file);
 
-    this.appService.updateUserApi(formData, this.userData._id).subscribe(
-      (data: any) => {
-        if (!data.success) {
-          this.appService.errToastMessage.update(() => data.error);
+    this.appService
+      .patchAPI(formData, this.userData._id, BaseUrl.updateUser)
+      .subscribe(
+        (data: any) => {
+          if (!data.success) {
+            this.appService.errToastMessage.update(() => data.error);
 
-          localStorage.removeItem('token');
-          return;
+            localStorage.removeItem('token');
+            return;
+          }
+        },
+        (err) => {
+          this.appService.errToastMessage.update(() => err);
         }
-      },
-      (err) => {
-        this.appService.errToastMessage.update(() => err);
-      }
-    );
+      );
   }
 
   onImageUpload(event: any) {

@@ -11,6 +11,6 @@
         </div>
     </div>
     <div class="error" *ngIf="errMessageButton">
-        <Button [routerLink]="['/register']" class="btn btn-danger">Go to Register Page!</Button>
+        <Button (click)="onBackToRegister()" class="btn btn-danger">Go to Register Page!</Button>
     </div>
 </div>

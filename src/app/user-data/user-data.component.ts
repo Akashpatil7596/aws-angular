@@ -37,7 +37,7 @@ export class UserDataComponent implements OnInit {
     this.appService.getUserByToken(token).subscribe(
       (data: any) => {
         this.imagePath = this.sanitizer.bypassSecurityTrustResourceUrl(
-          'data:image/jpg;base64,' + data.data.profile_picture
+          'data:image/jpg;base64,' + data.data.profile_picture.data
         );
         this.userData = data.data;
       },

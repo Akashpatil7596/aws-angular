@@ -17,7 +17,8 @@
                 <p><a data-bs-toggle="modal" data-bs-target="#exampleModal">forgot
                         password?</a></p>
 
-                <button type=" submit">Sign In</button>
+                <button type="submit" [disabled]="!loginForm.valid"
+                    [ngClass]="{'enabled': loginForm.valid, 'disabled': !loginForm.valid}">Sign In</button>
             </form>
         </div>
 
